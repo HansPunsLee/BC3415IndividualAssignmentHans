@@ -1,0 +1,272 @@
+:root {
+    --background: #f4f7fb;
+    --surface: #ffffff;
+    --text: #172033;
+    --muted: #667085;
+    --border: #d9e0ea;
+    --primary: #315efb;
+    --primary-dark: #2449cb;
+    --positive: #168450;
+    --negative: #c93433;
+    --medium: #b46b00;
+    --shadow: 0 12px 30px rgba(23, 32, 51, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    width: min(920px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 56px 0;
+}
+
+.hero {
+    margin-bottom: 28px;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+}
+
+h1 {
+    margin-bottom: 12px;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.05;
+}
+
+h2 {
+    margin-bottom: 0;
+}
+
+h3 {
+    margin-top: 28px;
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.subtitle {
+    max-width: 650px;
+    color: var(--muted);
+    font-size: 1.08rem;
+    line-height: 1.6;
+}
+
+.card {
+    margin-bottom: 20px;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+}
+
+label {
+    display: block;
+    margin: 0 0 8px;
+    font-weight: 700;
+}
+
+input,
+textarea {
+    width: 100%;
+    margin-bottom: 22px;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font: inherit;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: var(--primary);
+    outline: 3px solid rgba(49, 94, 251, 0.14);
+}
+
+.form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#character-count,
+.secondary-text {
+    color: var(--muted);
+}
+
+button {
+    padding: 13px 20px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+}
+
+button:hover {
+    background: var(--primary-dark);
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.message {
+    margin-bottom: 20px;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.error {
+    border: 1px solid #f0b3b3;
+    background: #fff1f1;
+    color: var(--negative);
+}
+
+.loading {
+    background: #edf2ff;
+    color: var(--primary-dark);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.results-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.metric {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.metric-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.metric strong {
+    font-size: 1.25rem;
+}
+
+.badge {
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.badge.low {
+    background: #e8f7ef;
+    color: var(--positive);
+}
+
+.badge.medium {
+    background: #fff4dd;
+    color: var(--medium);
+}
+
+.badge.high {
+    background: #ffe8e8;
+    color: var(--negative);
+}
+
+.probability-row {
+    margin-bottom: 14px;
+}
+
+.probability-heading {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.progress-background {
+    height: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e9edf3;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--primary);
+}
+
+.keyword {
+    display: inline-block;
+    margin: 0 8px 8px 0;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #edf2ff;
+    color: var(--primary-dark);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 650px) {
+    .container {
+        padding: 32px 0;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .form-footer,
+    .results-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        width: 100%;
+    }
+}
