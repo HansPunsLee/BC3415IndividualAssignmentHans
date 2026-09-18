@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Hotel Review Sentiment</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+<body>
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">
+                BC3415 Individual Assignment
+            </p>
+
+            <h1>
+                Hotel Review Sentiment Analyzer
+            </h1>
+
+            <p class="subtitle">
+                Analyse hotel customer feedback
+            </p>
+        </section>
+
+        <section class="card">
+            <form id="review-form">
+                <label for="order-id">
+                    Review reference
+                </label>
+
+                <input
+                    id="order-id"
+                    type="text"
+                    placeholder="Example: REVIEW-1001"
+                >
+
+                <label for="review">
+                    Customer review
+                </label>
+
+                <textarea
+                    id="review"
+                    rows="9"
+                    maxlength="5000"
+                    placeholder="Enter a hotel customer review..."
+                    required
+                ></textarea>
+
+                <div class="form-footer">
+                    <span id="character-count">
+                        0 / 5000
+                    </span>
+
+                    <button
+                        type="submit"
+                        id="analyse-button"
+                    >
+                        Analyse review
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section
+            id="error-box"
+            class="message error hidden"
+        ></section>
+
+        <section
+            id="loading-box"
+            class="message loading hidden"
+        >
+            Analysing review...
+        </section>
+
+        <section
+            id="results"
+            class="card hidden"
+        >
+            <div class="results-header">
+                <div>
+                    <p class="eyebrow">
+                        Analysis result
+                    </p>
+
+                    <h2>
+                        Prediction
+                    </h2>
+                </div>
+
+                <span
+                    id="risk-badge"
+                    class="badge"
+                ></span>
+            </div>
+
+            <div class="result-grid">
+                <div class="metric">
+                    <span class="metric-label">
+                        Sentiment
+                    </span>
+
+                    <strong id="sentiment-value"></strong>
+                </div>
+
+                <div class="metric">
+                    <span class="metric-label">
+                        Confidence
+                    </span>
+
+                    <strong id="confidence-value"></strong>
+                </div>
+
+                <div class="metric">
+                    <span class="metric-label">
+                        Review priority
+                    </span>
+
+                    <strong id="risk-value"></strong>
+                </div>
+            </div>
+
+            <h3>
+                Sentiment probabilities
+            </h3>
+
+            <div id="probability-list"></div>
+
+            <h3>
+                Explanation
+            </h3>
+
+            <p id="explanation-message"></p>
+
+            <div id="keyword-section">
+                <h3>
+                    Detected supporting words
+                </h3>
+
+                <div id="keyword-list"></div>
+            </div>
+
+            <h3>
+                Recommended action
+            </h3>
+
+            <p id="recommendation-action"></p>
+
+            <p
+                id="recommendation-reason"
+                class="secondary-text"
+            ></p>
+        </section>
+    </main>
+
+    <script
+        src="{{ url_for('static', filename='script.js') }}"
+    ></script>
+</body>
+</html>
