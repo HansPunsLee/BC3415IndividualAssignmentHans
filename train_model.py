@@ -2,7 +2,6 @@ from pathlib import Path
 import re
 
 import joblib
-import numpy as np
 import pandas as pd
 
 from sentence_transformers import SentenceTransformer
@@ -15,7 +14,6 @@ from sklearn.metrics import (
     f1_score
 )
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import normalize
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -23,7 +21,6 @@ DATA_PATH = BASE_DIR / "data" / "London_hotel_reviews.csv"
 MODEL_DIR = BASE_DIR / "models"
 
 MODEL_DIR.mkdir(exist_ok=True)
-
 
 EMBEDDING_MODEL_NAME = (
     "sentence-transformers/all-MiniLM-L6-v2"
@@ -36,7 +33,6 @@ EMBEDDING_MODEL_PATH = (
 CLASSIFIER_PATH = (
     MODEL_DIR / "sentiment_classifier.pkl"
 )
-
 
 LABELS = [
     "negative",
@@ -135,14 +131,6 @@ def main():
         show_progress_bar=True,
         convert_to_numpy=True,
         normalize_embeddings=True
-    )
-
-    X_train_embeddings = normalize(
-        X_train_embeddings
-    )
-
-    X_test_embeddings = normalize(
-        X_test_embeddings
     )
 
     classifier = LogisticRegression(

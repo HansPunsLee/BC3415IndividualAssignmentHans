@@ -1,14 +1,17 @@
 const form = document.getElementById("review-form");
 const reviewInput = document.getElementById("review");
+
 const characterCount = document.getElementById(
     "character-count"
 );
+
 const analyseButton = document.getElementById(
     "analyse-button"
 );
 
 const results = document.getElementById("results");
 const errorBox = document.getElementById("error-box");
+
 const loadingBox = document.getElementById(
     "loading-box"
 );
@@ -16,12 +19,15 @@ const loadingBox = document.getElementById(
 const sentimentValue = document.getElementById(
     "sentiment-value"
 );
+
 const confidenceValue = document.getElementById(
     "confidence-value"
 );
+
 const riskValue = document.getElementById(
     "risk-value"
 );
+
 const riskBadge = document.getElementById(
     "risk-badge"
 );
@@ -29,19 +35,11 @@ const riskBadge = document.getElementById(
 const probabilityList = document.getElementById(
     "probability-list"
 );
-const explanationMessage = document.getElementById(
-    "explanation-message"
-);
-const keywordSection = document.getElementById(
-    "keyword-section"
-);
-const keywordList = document.getElementById(
-    "keyword-list"
-);
 
 const recommendationAction = document.getElementById(
     "recommendation-action"
 );
+
 const recommendationReason = document.getElementById(
     "recommendation-reason"
 );
@@ -72,7 +70,18 @@ form.addEventListener("submit", async (event) => {
             })
         });
 
-        const data = await response.json();
+        const responseText = await response.text();
+
+        let data;
+
+        try {
+            data = JSON.parse(responseText);
+        } catch (error) {
+            throw new Error(
+                "The server returned an invalid response. " +
+                "Check the Flask terminal."
+            );
+        }
 
         if (!response.ok) {
             throw new Error(
@@ -92,7 +101,10 @@ form.addEventListener("submit", async (event) => {
 function renderResults(data) {
     results.classList.remove("hidden");
 
-    const sentiment = formatLabel(data.sentiment);
+    const sentiment = formatLabel(
+        data.sentiment
+    );
+
     const confidence =
         `${(data.confidence * 100).toFixed(1)}%`;
 
@@ -105,11 +117,13 @@ function renderResults(data) {
     riskValue.textContent = riskLevel;
 
     riskBadge.textContent = riskLevel;
+
     riskBadge.className =
         `badge ${data.recommendation.risk_level}`;
 
-    renderProbabilities(data.probabilities);
-    renderExplanation(data.explanation);
+    renderProbabilities(
+        data.probabilities
+    );
 
     recommendationAction.textContent =
         data.recommendation.action;
@@ -127,6 +141,7 @@ function renderProbabilities(probabilities) {
             const percentage = probability * 100;
 
             const row = document.createElement("div");
+
             row.className = "probability-row";
 
             row.innerHTML = `
@@ -151,28 +166,6 @@ function renderProbabilities(probabilities) {
             probabilityList.appendChild(row);
         }
     );
-}
-
-
-function renderExplanation(explanation) {
-    explanationMessage.textContent =
-        explanation.message;
-
-    keywordList.innerHTML = "";
-
-    if (!explanation.keywords.length) {
-        keywordSection.classList.add("hidden");
-        return;
-    }
-
-    keywordSection.classList.remove("hidden");
-
-    explanation.keywords.forEach((keyword) => {
-        const tag = document.createElement("span");
-        tag.className = "keyword";
-        tag.textContent = keyword;
-        keywordList.appendChild(tag);
-    });
 }
 
 

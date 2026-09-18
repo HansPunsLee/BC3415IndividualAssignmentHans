@@ -1,7 +1,16 @@
 from pathlib import Path
+import json
 
 import joblib
-from flask import Flask, jsonify, render_template, request
+import ollama
+
+from flask import (
+    Flask,
+    jsonify,
+    render_template,
+    request
+)
+
 from sentence_transformers import SentenceTransformer
 
 
@@ -14,6 +23,8 @@ EMBEDDING_MODEL_PATH = (
 CLASSIFIER_PATH = (
     BASE_DIR / "models" / "sentiment_classifier.pkl"
 )
+
+OLLAMA_MODEL = "llama3.2"
 
 
 app = Flask(__name__)
@@ -69,51 +80,57 @@ def predict_sentiment(review):
     }
 
 
-def get_recommendation(
+def generate_recommendation(
+    review,
     sentiment,
     confidence
 ):
-    if confidence < 0.60:
-        return {
-            "risk_level": "medium",
-            "action": "Send for manual review",
-            "reason": (
-                "The model confidence is low, so the "
-                "prediction should be checked by a "
-                "hotel employee."
-            )
-        }
+    prompt = f"""
+You are a hotel customer-service triage assistant.
 
-    if sentiment == "negative":
-        return {
-            "risk_level": "high",
-            "action": (
-                "Prioritise for service-recovery review"
-            ),
-            "reason": (
-                "The review was classified as negative "
-                "with reasonable confidence."
-            )
-        }
+Customer review:
+{review}
 
-    if sentiment == "neutral":
-        return {
-            "risk_level": "low",
-            "action": "No immediate escalation",
-            "reason": (
-                "The review does not contain strong "
-                "positive or negative sentiment."
-            )
-        }
+Machine-learning sentiment prediction:
+{sentiment}
 
-    return {
-        "risk_level": "low",
-        "action": "No immediate escalation",
-        "reason": (
-            "The review was classified as positive "
-            "with reasonable confidence."
-        )
-    }
+Machine-learning confidence:
+{confidence:.4f}
+
+Return only valid JSON with exactly these keys:
+{{
+  "risk_level": "low",
+  "action": "one concise recommended action",
+  "reason": "one or two concise sentences"
+}}
+
+The allowed risk_level values are only:
+- low
+- medium
+- high
+
+Rules:
+- Do not invent facts.
+- Do not accuse the customer or an employee.
+- Do not recommend automatic refunds.
+- Recommend human follow-up when the review includes a complaint.
+- Recommend medium or high priority for serious service problems,
+  safety issues, repeated complaints, or strongly negative experiences.
+- Keep the action concise.
+"""
+
+    response = ollama.generate(
+        model=OLLAMA_MODEL,
+        prompt=prompt,
+        format="json",
+        options={
+            "temperature": 0.2
+        }
+    )
+
+    return json.loads(
+        response["response"]
+    )
 
 
 @app.route("/")
@@ -128,14 +145,15 @@ def health():
     return jsonify({
         "status": "ok",
         "model_loaded": True,
-        "model_type": (
-            "Sentence Transformer embeddings "
-            "plus Logistic Regression"
-        )
+        "embedding_model": "all-MiniLM-L6-v2",
+        "recommendation_model": OLLAMA_MODEL
     })
 
 
-@app.route("/predict", methods=["POST"])
+@app.route(
+    "/predict",
+    methods=["POST"]
+)
 def predict():
     data = request.get_json()
 
@@ -145,7 +163,8 @@ def predict():
         review
     )
 
-    recommendation = get_recommendation(
+    recommendation = generate_recommendation(
+        review,
         prediction["sentiment"],
         prediction["confidence"]
     )
@@ -159,15 +178,6 @@ def predict():
         "probabilities": prediction[
             "probabilities"
         ],
-        "explanation": {
-            "keywords": [],
-            "message": (
-                "The sentiment was predicted using "
-                "a pretrained Sentence Transformer "
-                "neural network and a trained "
-                "classification layer."
-            )
-        },
         "recommendation": recommendation
     })
 

@@ -8,7 +8,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Hotel Review Sentiment</title>
+    <title>Hotel Review Sentiment Analyzer</title>
 
     <link
         rel="stylesheet"
@@ -27,22 +27,13 @@
             </h1>
 
             <p class="subtitle">
-                Analyse hotel customer feedback
+                Analyse hotel customer feedback and receive a
+                service-priority recommendation.
             </p>
         </section>
 
         <section class="card">
             <form id="review-form">
-                <label for="order-id">
-                    Review reference
-                </label>
-
-                <input
-                    id="order-id"
-                    type="text"
-                    placeholder="Example: REVIEW-1001"
-                >
-
                 <label for="review">
                     Customer review
                 </label>
@@ -79,7 +70,7 @@
             id="loading-box"
             class="message loading hidden"
         >
-            Analysing review...
+            Analysing review and generating recommendation...
         </section>
 
         <section
@@ -134,20 +125,6 @@
             </h3>
 
             <div id="probability-list"></div>
-
-            <h3>
-                Explanation
-            </h3>
-
-            <p id="explanation-message"></p>
-
-            <div id="keyword-section">
-                <h3>
-                    Detected supporting words
-                </h3>
-
-                <div id="keyword-list"></div>
-            </div>
 
             <h3>
                 Recommended action

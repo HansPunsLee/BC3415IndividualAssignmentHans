@@ -6,8 +6,8 @@
     --border: #d9e0ea;
     --primary: #315efb;
     --primary-dark: #2449cb;
-    --positive: #168450;
-    --negative: #c93433;
+    --positive: #16845b;
+    --negative: #c93434;
     --medium: #b46b00;
     --shadow: 0 12px 30px rgba(23, 32, 51, 0.08);
 }
@@ -86,7 +86,6 @@ label {
     font-weight: 700;
 }
 
-input,
 textarea {
     width: 100%;
     margin-bottom: 22px;
@@ -95,13 +94,9 @@ textarea {
     border-radius: 10px;
     color: var(--text);
     font: inherit;
-}
-
-textarea {
     resize: vertical;
 }
 
-input:focus,
 textarea:focus {
     border-color: var(--primary);
     outline: 3px solid rgba(49, 94, 251, 0.14);
@@ -235,16 +230,6 @@ button:disabled {
     height: 100%;
     border-radius: inherit;
     background: var(--primary);
-}
-
-.keyword {
-    display: inline-block;
-    margin: 0 8px 8px 0;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: #edf2ff;
-    color: var(--primary-dark);
-    font-size: 0.85rem;
 }
 
 @media (max-width: 650px) {
