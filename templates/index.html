@@ -126,16 +126,46 @@
 
             <div id="probability-list"></div>
 
-            <h3>
-                Recommended action
-            </h3>
+<h3>
+    Review insights
+</h3>
 
-            <p id="recommendation-action"></p>
+<div class="insight-grid">
+    <div class="insight positive-insight">
+        <span class="insight-label">
+            Best feature
+        </span>
 
-            <p
-                id="recommendation-reason"
-                class="secondary-text"
-            ></p>
+        <strong id="best-feature"></strong>
+
+        <span
+            id="feature-sentiment"
+            class="insight-sentiment"
+        ></span>
+    </div>
+
+    <div class="insight negative-insight">
+        <span class="insight-label">
+            Needs work
+        </span>
+
+        <strong id="needs-work"></strong>
+
+        <span
+            id="needs-work-sentiment"
+            class="insight-sentiment"
+        ></span>
+    </div>
+</div>
+
+<h3>
+    Analysis reasoning
+</h3>
+
+<p
+    id="analysis-reason"
+    class="secondary-text"
+></p>
         </section>
     </main>
 

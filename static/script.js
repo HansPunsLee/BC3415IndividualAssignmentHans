@@ -36,8 +36,24 @@ const probabilityList = document.getElementById(
     "probability-list"
 );
 
-const recommendationAction = document.getElementById(
-    "recommendation-action"
+const bestFeature = document.getElementById(
+    "best-feature"
+);
+
+const featureSentiment = document.getElementById(
+    "feature-sentiment"
+);
+
+const needsWork = document.getElementById(
+    "needs-work"
+);
+
+const needsWorkSentiment = document.getElementById(
+    "needs-work-sentiment"
+);
+
+const analysisReason = document.getElementById(
+    "analysis-reason"
 );
 
 const recommendationReason = document.getElementById(
@@ -108,30 +124,37 @@ function renderResults(data) {
     const confidence =
         `${(data.confidence * 100).toFixed(1)}%`;
 
-    const riskLevel = formatLabel(
-        data.recommendation.risk_level
-    );
-
     sentimentValue.textContent = sentiment;
     confidenceValue.textContent = confidence;
-    riskValue.textContent = riskLevel;
+    riskValue.textContent = sentiment;
 
-    riskBadge.textContent = riskLevel;
-
+    riskBadge.textContent = sentiment;
     riskBadge.className =
-        `badge ${data.recommendation.risk_level}`;
+        `badge ${data.sentiment}`;
 
     renderProbabilities(
         data.probabilities
     );
 
-    recommendationAction.textContent =
-        data.recommendation.action;
+    bestFeature.textContent =
+        data.best_feature;
 
-    recommendationReason.textContent =
-        data.recommendation.reason;
+    featureSentiment.textContent =
+        `Sentiment: ${formatLabel(
+            data.feature_sentiment
+        )}`;
+
+    needsWork.textContent =
+        data.needs_work;
+
+    needsWorkSentiment.textContent =
+        `Sentiment: ${formatLabel(
+            data.needs_work_sentiment
+        )}`;
+
+    analysisReason.textContent =
+        data.reason;
 }
-
 
 function renderProbabilities(probabilities) {
     probabilityList.innerHTML = "";

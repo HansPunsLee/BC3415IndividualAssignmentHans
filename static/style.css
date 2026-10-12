@@ -186,6 +186,8 @@ button:disabled {
     font-size: 1.25rem;
 }
 
+/* General badge styling */
+
 .badge {
     padding: 8px 12px;
     border-radius: 999px;
@@ -193,20 +195,24 @@ button:disabled {
     font-weight: 700;
 }
 
-.badge.low {
+/* Sentiment badge colours */
+
+.badge.positive {
     background: #e8f7ef;
     color: var(--positive);
 }
 
-.badge.medium {
+.badge.neutral {
     background: #fff4dd;
     color: var(--medium);
 }
 
-.badge.high {
+.badge.negative {
     background: #ffe8e8;
     color: var(--negative);
 }
+
+/* Sentiment probability bars */
 
 .probability-row {
     margin-bottom: 14px;
@@ -232,6 +238,49 @@ button:disabled {
     background: var(--primary);
 }
 
+/* Best feature and needs work cards */
+
+.insight-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.insight {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.positive-insight {
+    border-color: #b9e7ca;
+    background: #f1fbf5;
+}
+
+.negative-insight {
+    border-color: #f0b3b3;
+    background: #fff4f4;
+}
+
+.insight-label {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.insight strong {
+    font-size: 1.1rem;
+}
+
+.insight-sentiment {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+/* Mobile layout */
+
 @media (max-width: 650px) {
     .container {
         padding: 32px 0;
@@ -247,7 +296,8 @@ button:disabled {
         flex-direction: column;
     }
 
-    .result-grid {
+    .result-grid,
+    .insight-grid {
         grid-template-columns: 1fr;
     }
 
