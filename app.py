@@ -50,31 +50,41 @@ def predict_sentiment(review):
 
 
 def generate_recommendation(review, sentiment, confidence):
-    prompt = f"""You are a hotel customer-service assistant analyzing a guest review.
+    prompt = f"""You are a precise hotel feedback parser. Analyze the guest review below.
 
-REVIEW TO ANALYZE:
+REVIEW:
 "{review}"
 
-PREDICTED CLASSIFICATION:
-Sentiment: {sentiment}
-Confidence: {confidence:.2f}
+CATEGORIES TO CHOOSE FROM:
+- Front Desk / Service
+- Check-in / Check-out Speed
+- Room Cleanliness
+- Bed Comfort
+- Air Conditioning / Heating
+- Room Size / View
+- Bathroom / Shower
+- Swimming Pool / Gym
+- Breakfast / Food
+- Wi-Fi / Internet
+- Noise Level
+- Pricing / Value
 
 INSTRUCTIONS:
-1. Extract the most praised aspect/feature in "best_feature" (e.g., "Bed comfort", "Location", "Staff", "Cleanliness"). Only output "None identified" if the review is 100% negative with zero positive points.
-2. Extract the main area needing improvement in "needs_work" (e.g., "Check-in time", "Air conditioning", "Noise", "Price"). Only output "None identified" if the review is 100% glowing positive with zero complaints.
-3. Assign "positive", "neutral", or "negative" to "feature_sentiment" and "needs_work_sentiment".
-4. Determine "overall_sentiment" ("positive", "neutral", or "negative").
-5. Write a concise 1-sentence explanation in "reason".
+1. "best_feature": Select EXACTLY ONE category from the list above that was praised. If NO positive feature was mentioned, output "None identified".
+2. "needs_work": Select EXACTLY ONE category from the list above that was criticized. If NO negative aspect was mentioned, output "None identified".
+3. "feature_sentiment": "positive", "neutral", or "negative".
+4. "needs_work_sentiment": "positive", "neutral", or "negative".
+5. "overall_sentiment": "positive", "neutral", or "negative".
+6. "reason": Write a 1-sentence concise explanation referencing the exact review content.
 
-OUTPUT FORMAT REQUIREMENTS:
-Return strictly a valid JSON object matching this schema:
+OUTPUT SCHEMA (JSON ONLY):
 {{
-  "overall_sentiment": "positive",
-  "best_feature": "Aspect name",
-  "needs_work": "Aspect name or None identified",
-  "feature_sentiment": "positive",
-  "needs_work_sentiment": "negative",
-  "reason": "1-sentence summary"
+  "overall_sentiment": "<positive|neutral|negative>",
+  "best_feature": "<category or None identified>",
+  "needs_work": "<category or None identified>",
+  "feature_sentiment": "<positive|neutral|negative>",
+  "needs_work_sentiment": "<positive|neutral|negative>",
+  "reason": "<explanation>"
 }}"""
 
     try:
@@ -83,7 +93,11 @@ Return strictly a valid JSON object matching this schema:
             messages=[{"role": "user", "content": prompt}],
             stream=False,
             format="json",
-            options={"temperature": 0.2, "num_ctx": 2048, "num_predict": 250},
+            options={
+                "temperature": 0.0,  # Setting temperature to 0 forces deterministic, exact answers
+                "num_ctx": 2048,
+                "num_predict": 200
+            }
         )
 
         response_text = response.message.content.strip()
