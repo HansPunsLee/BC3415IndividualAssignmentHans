@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent
 EMBEDDING_MODEL_PATH = BASE_DIR / "models" / "sentence_transformer"
 CLASSIFIER_PATH = BASE_DIR / "models" / "sentiment_classifier.pkl"
 
-OLLAMA_MODEL = "llama3.2:1b"
+OLLAMA_MODEL = "llama3.2"
 OLLAMA_CLIENT = ollama.Client(host="http://127.0.0.1:11434", timeout=300)
 
 app = Flask(__name__)
@@ -60,23 +60,21 @@ Sentiment: {sentiment}
 Confidence: {confidence:.2f}
 
 INSTRUCTIONS:
-1. Extract the single best feature praised in the review for "best_feature". If no positive feature is mentioned, write "None identified".
-2. Extract the main area needing improvement for "needs_work". If no negative aspect is mentioned, write "None identified".
+1. Extract the most praised aspect/feature in "best_feature" (e.g., "Bed comfort", "Location", "Staff", "Cleanliness"). Only output "None identified" if the review is 100% negative with zero positive points.
+2. Extract the main area needing improvement in "needs_work" (e.g., "Check-in time", "Air conditioning", "Noise", "Price"). Only output "None identified" if the review is 100% glowing positive with zero complaints.
 3. Assign "positive", "neutral", or "negative" to "feature_sentiment" and "needs_work_sentiment".
-4. Determine "overall_sentiment" ("positive", "neutral", or "negative"). If the review contains significant positive AND negative points, set "overall_sentiment" to "neutral".
-5. Write a concise, 1-sentence explanation in "reason" referencing ONLY the review content above.
+4. Determine "overall_sentiment" ("positive", "neutral", or "negative").
+5. Write a concise 1-sentence explanation in "reason".
 
 OUTPUT FORMAT REQUIREMENTS:
-Return strictly a single JSON object. Do NOT repeat example words in your response.
-
-Schema:
+Return strictly a valid JSON object matching this schema:
 {{
-  "overall_sentiment": "<positive|neutral|negative>",
-  "best_feature": "<aspect or None identified>",
-  "needs_work": "<aspect or None identified>",
-  "feature_sentiment": "<positive|neutral|negative>",
-  "needs_work_sentiment": "<positive|neutral|negative>",
-  "reason": "<1 sentence explanation based on the review>"
+  "overall_sentiment": "positive",
+  "best_feature": "Aspect name",
+  "needs_work": "Aspect name or None identified",
+  "feature_sentiment": "positive",
+  "needs_work_sentiment": "negative",
+  "reason": "1-sentence summary"
 }}"""
 
     try:
@@ -84,12 +82,8 @@ Schema:
             model=OLLAMA_MODEL,
             messages=[{"role": "user", "content": prompt}],
             stream=False,
-            format="json",  # Forces Ollama to produce strict JSON output
-            options={
-                "temperature": 0.1,
-                "num_ctx": 2048,
-                "num_predict": 200
-            }
+            format="json",
+            options={"temperature": 0.2, "num_ctx": 2048, "num_predict": 250},
         )
 
         response_text = response.message.content.strip()
@@ -103,9 +97,8 @@ Schema:
             "needs_work": "None identified",
             "feature_sentiment": "neutral",
             "needs_work_sentiment": "neutral",
-            "reason": "The aspect analysis model was unavailable. Please review manually."
+            "reason": "The aspect analysis model encountered an error."
         }
-
 
 @app.route("/predict", methods=["POST"])
 def predict():
